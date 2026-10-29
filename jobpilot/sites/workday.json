@@ -1,0 +1,18 @@
+{
+  "id": "workday",
+  "kind": "ats",
+  "name": "Workday",
+  "match": {
+    "hosts": [
+      "myworkdayjobs.com",
+      "workday.com"
+    ],
+    "markers": [
+      "myworkdayjobs"
+    ]
+  },
+  "login": "required",
+  "notes": [
+    "an account per company tenant: the user creates or signs in"
+  ]
+}

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Caiet Aplicări"
+  short_description: "Notițe cu deadline, statusul aplicărilor și skill-urile cerute pe piață"
+  default_prompt: "Ce am de făcut săptămâna asta?"
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jobpilot"
+version = "0.2.0"
+description = "Collect jobs from public ATS boards, score them against a skills pool (Jev), answer and fill application forms"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [{name = "Alexandru Negulescu"}]
+requires-python = ">=3.10"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+]
+dependencies = []
+
+[project.optional-dependencies]
+browser = ["playwright"]
+cv = ["python-docx", "pypdf"]
+dashboard = ["fastapi", "uvicorn"]
+
+[project.scripts]
+jobpilot = "jobpilot.cli:main"
+jobpilot-dashboard = "dashboard.__main__:main"
+
+[tool.setuptools]
+packages = ["jobpilot", "dashboard"]
+
+[tool.setuptools.package-data]
+jobpilot = ["templates/*.json", "templates/*.md", "sites/*.json"]
+dashboard = ["static/*", "static/assets/*"]

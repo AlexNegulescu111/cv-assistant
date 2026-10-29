@@ -1,0 +1,26 @@
+# Personal data never belongs in the shared package (only at the repo root;
+# tests/fixture_workspace is a fictional profile and is kept)
+/profile.json
+/MASTER_SKILLS_POOL.md
+/AGENTS.md
+/demanded_skills_to_learn.csv
+/drafts/
+/output/
+/tracker/
+/ANSWERS_POOL.json
+/.env
+/onboarding/
+/skill_clusters.json
+/job_sources.json
+/scoring.json
+/apply.json
+/site_templates/
+/.claude/
+cv_workspace.zip
+caiet_changes.json
+dist/
+_test_ws/
+__pycache__/
+node_modules/
+build/
+*.egg-info/

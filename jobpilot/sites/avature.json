@@ -1,0 +1,21 @@
+{
+  "id": "avature",
+  "kind": "ats",
+  "name": "Avature",
+  "match": {
+    "hosts": [
+      "avature.net"
+    ],
+    "markers": [
+      "avature"
+    ]
+  },
+  "guest_method": [
+    "Upload File",
+    "Enter Data"
+  ],
+  "login": "optional",
+  "notes": [
+    "login page also offers Upload File / Enter Data without an account"
+  ]
+}

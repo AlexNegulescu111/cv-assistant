@@ -1,0 +1,14 @@
+{
+  "id": "bamboohr",
+  "kind": "ats",
+  "name": "BambooHR",
+  "match": {
+    "hosts": [
+      "bamboohr.com"
+    ],
+    "markers": [
+      "bamboohr"
+    ]
+  },
+  "login": "none"
+}

@@ -1,0 +1,47 @@
+{
+  "name": "",
+  "file_prefix": "",
+  "headline_default": "",
+  "contact": {
+    "city": "",
+    "phone": "",
+    "email": "",
+    "linkedin": "",
+    "github": "",
+    "portfolio": ""
+  },
+  "chat_language": "ro",
+  "cv_languages": [
+    "EN"
+  ],
+  "target_fields": [
+    "Automation",
+    "AI",
+    "Data",
+    "ML"
+  ],
+  "paper": "A4",
+  "page_limit": 2,
+  "created": "",
+  "updated": "",
+  "application_defaults": {
+    "screening": {
+      "current_company": "",
+      "current_title": "",
+      "work_authorization": "",
+      "requires_visa_sponsorship": "",
+      "notice_period": "",
+      "salary_expectation": "",
+      "willing_to_relocate": "",
+      "preferred_work_mode": "",
+      "earliest_start_date": "",
+      "how_did_you_hear": ""
+    },
+    "voluntary_disclosures": {
+      "gender": "Prefer not to say",
+      "ethnicity": "Prefer not to say",
+      "veteran_status": "Prefer not to say",
+      "disability": "Prefer not to say"
+    }
+  }
+}

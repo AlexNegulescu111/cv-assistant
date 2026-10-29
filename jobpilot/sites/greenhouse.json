@@ -1,0 +1,25 @@
+{
+  "id": "greenhouse",
+  "kind": "ats",
+  "name": "Greenhouse",
+  "match": {
+    "hosts": [
+      "greenhouse.io"
+    ],
+    "markers": [
+      "boards.greenhouse.io",
+      "job-boards.greenhouse.io",
+      "grnhse_app"
+    ]
+  },
+  "description_selector": ".job__description",
+  "submit_text": [
+    "Submit application",
+    "Submit Application"
+  ],
+  "login": "none",
+  "notes": [
+    "embedded on company sites through the grnhse_app iframe",
+    "some boards add reCAPTCHA at submit"
+  ]
+}

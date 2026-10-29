@@ -1,0 +1,6 @@
+interface:
+  display_name: "Adaugă un răspuns"
+  short_description: "Salvează un răspuns reutilizabil pentru formularele de aplicare (ANSWERS_POOL.json)"
+  default_prompt: "Vreau să salvez / schimb un răspuns pentru formulare:"
+policy:
+  allow_implicit_invocation: true

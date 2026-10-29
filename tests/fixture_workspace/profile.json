@@ -1,0 +1,46 @@
+{
+  "name": "Maria Ionescu",
+  "file_prefix": "Maria_Ionescu",
+  "headline_default": "Data Analyst | SQL · Python · Power BI",
+  "contact": {
+    "city": "Cluj-Napoca, Romania",
+    "phone": "+40 700 000 000",
+    "email": "maria.ionescu@example.com",
+    "linkedin": "linkedin.com/in/maria-ionescu-example",
+    "github": "github.com/maria-ionescu-example",
+    "portfolio": ""
+  },
+  "chat_language": "ro",
+  "cv_languages": [
+    "EN"
+  ],
+  "target_fields": [
+    "Data",
+    "BI",
+    "Analytics"
+  ],
+  "paper": "A4",
+  "page_limit": 2,
+  "created": "2026-10-20",
+  "updated": "2026-10-20",
+  "application_defaults": {
+    "screening": {
+      "current_company": "Firma Exemplu SA",
+      "current_title": "Data Analyst",
+      "work_authorization": "Yes (EU citizen)",
+      "requires_visa_sponsorship": "No",
+      "notice_period": "",
+      "salary_expectation": "",
+      "willing_to_relocate": "",
+      "preferred_work_mode": "",
+      "earliest_start_date": "",
+      "how_did_you_hear": ""
+    },
+    "voluntary_disclosures": {
+      "gender": "Prefer not to say",
+      "ethnicity": "Prefer not to say",
+      "veteran_status": "Prefer not to say",
+      "disability": "Prefer not to say"
+    }
+  }
+}

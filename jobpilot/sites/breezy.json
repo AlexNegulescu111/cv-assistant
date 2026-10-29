@@ -1,0 +1,14 @@
+{
+  "id": "breezy",
+  "kind": "ats",
+  "name": "Breezy",
+  "match": {
+    "hosts": [
+      "breezy.hr"
+    ],
+    "markers": [
+      "breezy.hr"
+    ]
+  },
+  "login": "none"
+}

@@ -1,0 +1,30 @@
+{
+  "model": "jev-latest",
+  "reference_draft": null,
+  "max_description_chars": 9000,
+  "max_must_have": 12,
+  "max_nice_to_have": 6,
+  "long_context": false,
+  "workers": 4,
+  "weights": {
+    "must_have_coverage": 0.35,
+    "nice_to_have_coverage": 0.05,
+    "skills_fit": 0.3,
+    "seniority_fit": 0.15,
+    "domain_fit": 0.15
+  },
+  "hard_requirement_weight": 2.0,
+  "thresholds": {
+    "hard": 0.6,
+    "met": 0.7,
+    "not_met": 0.3,
+    "language_knockout": 0.7,
+    "low_confidence": 0.45,
+    "apply": 70,
+    "review": 50
+  },
+  "_help": "reference_draft: a CV draft whose Work Experience / Education / Languages sections describe the candidate; languages: spoken languages (default: read from the profile); target_domain: the kind of work wanted; role_families: optional {label: description} used to classify jobs",
+  "languages": [],
+  "target_domain": "the kind of work the candidate's profile is focused on",
+  "role_families": {}
+}

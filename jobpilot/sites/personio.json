@@ -1,0 +1,15 @@
+{
+  "id": "personio",
+  "kind": "ats",
+  "name": "Personio",
+  "match": {
+    "hosts": [
+      "jobs.personio.de",
+      "jobs.personio.com"
+    ],
+    "markers": [
+      "personio"
+    ]
+  },
+  "login": "none"
+}

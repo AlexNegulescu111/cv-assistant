@@ -1,0 +1,14 @@
+{
+  "id": "taleo",
+  "kind": "ats",
+  "name": "Taleo",
+  "match": {
+    "hosts": [
+      "taleo.net"
+    ],
+    "markers": [
+      "taleo"
+    ]
+  },
+  "login": "required"
+}

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Aplică automat"
+  short_description: "Aplică la joburile cu scor bun, sub limita zilnică; restul intră în coada ta"
+  default_prompt: "Rulează aplicările automate de azi."
+policy:
+  allow_implicit_invocation: true

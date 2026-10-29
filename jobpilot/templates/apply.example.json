@@ -1,0 +1,11 @@
+{
+  "_help": "daily_cap: submissions per day (counted from the applied log); top_n: jobs per run; min_match: extra floor on the score; submit: false = never submit (the default for a new workspace: review the first applications, then turn it on) (needs ANSWERS_POOL settings.auto_submit too); headless: unattended fills without a window; cv_by_family: {role family: CV pdf}; default_cv: CV used when no other fits (null = each job needs its own CV)",
+  "daily_cap": 10,
+  "top_n": 3,
+  "min_match": 0,
+  "submit": false,
+  "headless": true,
+  "cv_by_family": {},
+  "default_cv": null,
+  "wait_minutes": 60
+}

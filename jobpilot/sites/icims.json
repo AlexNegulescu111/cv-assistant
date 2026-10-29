@@ -1,0 +1,14 @@
+{
+  "id": "icims",
+  "kind": "ats",
+  "name": "iCIMS",
+  "match": {
+    "hosts": [
+      "icims.com"
+    ],
+    "markers": [
+      "icims"
+    ]
+  },
+  "login": "required"
+}

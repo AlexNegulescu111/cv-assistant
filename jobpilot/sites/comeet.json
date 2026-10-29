@@ -1,0 +1,18 @@
+{
+  "id": "comeet",
+  "kind": "ats",
+  "name": "Comeet",
+  "match": {
+    "hosts": [
+      "comeet.com",
+      "comeet.co"
+    ],
+    "markers": [
+      "comeet"
+    ]
+  },
+  "login": "none",
+  "notes": [
+    "form in a late-loading iframe"
+  ]
+}

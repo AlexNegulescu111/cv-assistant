@@ -1,0 +1,6 @@
+interface:
+  display_name: "CV pentru un job"
+  short_description: "CV adaptat anunțului (DOCX/PDF), analiză de potrivire și pregătire de interviu"
+  default_prompt: "Fă-mi un CV pentru acest anunț:"
+policy:
+  allow_implicit_invocation: true

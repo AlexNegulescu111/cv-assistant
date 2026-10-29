@@ -1,0 +1,6 @@
+interface:
+  display_name: "Adaugă o competență"
+  short_description: "Adaugă un skill, proiect, curs sau metrică nouă în master pool"
+  default_prompt: "Am terminat ceva nou și vreau să-l adaug în master pool:"
+policy:
+  allow_implicit_invocation: true

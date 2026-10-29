@@ -1,0 +1,17 @@
+{
+  "id": "phenom",
+  "kind": "ats",
+  "name": "Phenom",
+  "match": {
+    "hosts": [],
+    "markers": [
+      "phenompeople"
+    ]
+  },
+  "login": "optional",
+  "notes": [
+    "company career sites (e.g. jobs-cee.pwc.com)",
+    "chained dropdowns: How did you hear → Source, parents re-selected when the child stays empty",
+    "sticky header can cover the Apply button: the link target is opened"
+  ]
+}

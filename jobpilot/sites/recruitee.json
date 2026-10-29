@@ -1,0 +1,18 @@
+{
+  "id": "recruitee",
+  "kind": "ats",
+  "name": "Recruitee",
+  "match": {
+    "hosts": [
+      "recruitee.com"
+    ],
+    "markers": [
+      "recruitee"
+    ]
+  },
+  "description_selector": ".description",
+  "apply_text": [
+    "Apply"
+  ],
+  "login": "none"
+}

@@ -1,0 +1,745 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caiet Aplicări</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: agenda of actions grouped by deadline on the left, capture form + folder data (companies, demanded skills) on the right */
+:root {
+  --bg: #f4f5f9;
+  --surface: #ffffff;
+  --sunk: #eceef5;
+  --fg: #1a1d2b;
+  --muted: #5d6378;
+  --line: #d9dce8;
+  --accent: #2f45c4;
+  --accent-soft: #e3e7fb;
+  --today: #b7791f;
+  --today-soft: #fbf0dc;
+  --late: #c0392b;
+  --late-soft: #fbe5e2;
+  --ok: #2e7d4f;
+  --ok-soft: #e0f2e7;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", Consolas, ui-monospace, monospace;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11131b; --surface: #1a1d28; --sunk: #222634; --fg: #e8eaf2; --muted: #9aa0b6; --line: #2e3344;
+    --accent: #8c9dff; --accent-soft: #252c52; --today: #f0b24a; --today-soft: #3a2e17;
+    --late: #ff8073; --late-soft: #3d1f1d; --ok: #6fd39a; --ok-soft: #1b3426; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11131b; --surface: #1a1d28; --sunk: #222634; --fg: #e8eaf2; --muted: #9aa0b6; --line: #2e3344;
+  --accent: #8c9dff; --accent-soft: #252c52; --today: #f0b24a; --today-soft: #3a2e17;
+  --late: #ff8073; --late-soft: #3d1f1d; --ok: #6fd39a; --ok-soft: #1b3426; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 28px 20px 64px; display: grid; gap: 22px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-size: 1.15rem; font-weight: 700; }
+.eyebrow { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.muted { color: var(--muted); }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+header.top { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px 24px; }
+.sync { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); }
+.sync b { color: var(--fg); font-weight: 600; }
+
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; display: grid; gap: 2px; text-align: left; cursor: pointer; }
+.stat:hover { border-color: var(--accent); }
+.stat .n { font-family: var(--font-display); font-size: 1.7rem; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.stat.late .n { color: var(--late); }
+.stat.week .n { color: var(--today); }
+.stat[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+
+.main { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 22px; align-items: start; }
+.col { display: grid; gap: 16px; min-width: 0; }
+
+.filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.filters input, .filters select { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; min-width: 0; }
+.filters input { flex: 1 1 180px; }
+
+.group { display: grid; gap: 6px; }
+.group-head { display: flex; align-items: baseline; gap: 8px; padding: 6px 2px 2px; border-bottom: 1px solid var(--line); }
+.group-head .count { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); }
+.group.late .group-head h3 { color: var(--late); }
+.group.today .group-head h3 { color: var(--today); }
+.group-head h3 { font-size: 0.95rem; font-weight: 700; }
+
+.note { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 12px; align-items: start; padding: 10px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.note.done { opacity: 0.6; }
+.note.done .action { text-decoration: line-through; }
+.date { font-family: var(--font-mono); text-align: center; border-radius: 8px; padding: 4px 0; background: var(--sunk); line-height: 1.15; }
+.date .d { font-size: 1.1rem; font-weight: 600; display: block; }
+.date .m { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.date.late { background: var(--late-soft); color: var(--late); }
+.date.late .m { color: var(--late); }
+.date.today { background: var(--today-soft); color: var(--today); }
+.date.today .m { color: var(--today); }
+.date.none { font-size: 0.7rem; color: var(--muted); padding: 10px 0; }
+.body { min-width: 0; display: grid; gap: 4px; }
+.action { font-weight: 600; overflow-wrap: anywhere; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 0.8rem; }
+.chip { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 999px; background: var(--sunk); color: var(--muted); font-size: 0.76rem; white-space: nowrap; }
+.chip.company { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.chip.prio-high { background: var(--late-soft); color: var(--late); }
+.chip.st-doing { background: var(--today-soft); color: var(--today); }
+.chip.st-done { background: var(--ok-soft); color: var(--ok); }
+.details { font-size: 0.85rem; color: var(--muted); white-space: pre-wrap; overflow-wrap: anywhere; }
+.rel { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); }
+.rel.late { color: var(--late); }
+.acts { display: flex; gap: 4px; flex-wrap: wrap; justify-content: end; }
+.icon-btn { background: transparent; border: 1px solid var(--line); border-radius: 7px; padding: 3px 8px; cursor: pointer; font-size: 0.78rem; color: var(--muted); }
+.icon-btn:hover { color: var(--fg); border-color: var(--fg); }
+.icon-btn.primary { color: var(--ok); border-color: var(--ok); }
+.icon-btn.danger { color: var(--late); border-color: var(--late); }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; display: grid; gap: 12px; min-width: 0; }
+form.panel label { display: grid; gap: 4px; font-size: 0.8rem; color: var(--muted); }
+form.panel input, form.panel select, form.panel textarea { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; color: var(--fg); width: 100%; min-width: 0; }
+form.panel textarea { resize: vertical; min-height: 64px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btn { background: var(--accent); color: var(--surface); border: none; border-radius: 8px; padding: 9px 14px; font-weight: 600; cursor: pointer; }
+.btn.ghost { background: transparent; color: var(--muted); border: 1px solid var(--line); }
+.form-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.msg { font-size: 0.82rem; min-height: 1.2em; }
+.msg.err { color: var(--late); }
+.msg.ok { color: var(--ok); }
+
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); }
+.tab { background: none; border: none; border-bottom: 2px solid transparent; padding: 6px 10px; cursor: pointer; color: var(--muted); font-weight: 600; }
+.tab[aria-selected="true"] { color: var(--fg); border-color: var(--accent); }
+.list { display: grid; gap: 8px; max-height: 520px; overflow-y: auto; padding-right: 2px; }
+.item { display: grid; gap: 3px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
+.item-top { display: flex; justify-content: space-between; gap: 8px; align-items: start; }
+.item-title { font-weight: 600; font-size: 0.9rem; overflow-wrap: anywhere; min-width: 0; }
+.item small { color: var(--muted); font-size: 0.78rem; overflow-wrap: anywhere; }
+.demand { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); white-space: nowrap; }
+.item-acts { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; align-items: center; }
+.item-acts select { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 2px 6px; font-size: 0.78rem; }
+
+.empty { border: 1px dashed var(--line); border-radius: var(--radius); padding: 22px; text-align: center; color: var(--muted); display: grid; gap: 6px; }
+.banner { background: var(--sunk); border-radius: 8px; padding: 10px 12px; font-size: 0.85rem; color: var(--muted); }
+details.done-group summary { cursor: pointer; font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; padding: 6px 2px; color: var(--muted); }
+details.done-group[open] summary { margin-bottom: 6px; }
+details.done-group .group { gap: 6px; }
+
+@media (max-width: 900px) {
+  .main { grid-template-columns: minmax(0, 1fr); }
+  .side { order: -1; }
+}
+@media (max-width: 520px) {
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .note { grid-template-columns: 48px minmax(0, 1fr); }
+  .acts { grid-column: 1 / -1; justify-content: start; }
+  .row2 { grid-template-columns: 1fr; }
+  h1 { font-size: 1.6rem; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .note { transition: border-color .15s; }
+  .note:hover { border-color: var(--muted); }
+}
+[hidden] { display: none !important; }
+.banner.pending { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between; background: var(--today-soft); color: var(--fg); }
+.banner.pending .form-actions { gap: 6px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow" id="ws"></div>
+      <h1 id="title">Caiet Aplicări</h1>
+      <div class="muted">Acțiuni pentru CV: ce înveți, ce construiești, unde aplici și până când.</div>
+    </div>
+    <div class="sync" id="sync">Se încarcă datele…</div>
+  </header>
+
+  <div class="banner pending" id="pending" hidden>
+    <span id="pending-text"></span>
+    <span class="form-actions">
+      <button class="btn" type="button" id="exp-dl">Descarcă modificările</button>
+      <button class="btn ghost" type="button" id="exp-copy">Copiază</button>
+    </span>
+  </div>
+
+  <section class="stats" aria-label="Rezumat">
+    <button class="stat late" type="button" data-quick="late" aria-pressed="false"><span class="n" id="s-late">–</span><span class="eyebrow">Întârziate</span></button>
+    <button class="stat week" type="button" data-quick="week" aria-pressed="false"><span class="n" id="s-week">–</span><span class="eyebrow">Următoarele 7 zile</span></button>
+    <button class="stat" type="button" data-quick="open" aria-pressed="false"><span class="n" id="s-open">–</span><span class="eyebrow">Deschise</span></button>
+    <button class="stat" type="button" data-quick="skills" aria-pressed="false"><span class="n" id="s-skills">–</span><span class="eyebrow">Skill-uri de învățat</span></button>
+  </section>
+
+  <div class="main">
+    <section class="col" aria-label="Agenda">
+      <div class="filters">
+        <input id="f-q" type="search" placeholder="Caută în acțiuni, companii, skill-uri…" aria-label="Caută">
+        <select id="f-company" aria-label="Companie"><option value="">Toate companiile</option></select>
+        <select id="f-kind" aria-label="Tip"><option value="">Toate tipurile</option></select>
+      </div>
+      <div id="agenda" class="col"></div>
+    </section>
+
+    <aside class="col side">
+      <form class="panel" id="form" autocomplete="off">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+          <h2 id="form-title">Notiță nouă</h2>
+          <span class="eyebrow" id="form-mode"></span>
+        </div>
+        <label>Acțiunea
+          <input id="n-action" required maxlength="200" placeholder="ex. Construiesc chatbot RAG peste PDF-urile mele">
+        </label>
+        <div class="row2">
+          <label>Companie
+            <input id="n-company" list="dl-companies" maxlength="120" placeholder="ex. Exemplu SRL">
+          </label>
+          <label>Deadline
+            <input id="n-deadline" type="date">
+          </label>
+        </div>
+        <div class="row2">
+          <label>Tip
+            <select id="n-kind"></select>
+          </label>
+          <label>Prioritate
+            <select id="n-priority">
+              <option value="high">Mare</option>
+              <option value="medium" selected>Medie</option>
+              <option value="low">Mică</option>
+            </select>
+          </label>
+        </div>
+        <div class="row2">
+          <label>Skill legat
+            <input id="n-skill" list="dl-skills" maxlength="120" placeholder="opțional">
+          </label>
+          <label>Status
+            <select id="n-status">
+              <option value="todo">De făcut</option>
+              <option value="doing">În lucru</option>
+              <option value="done">Gata</option>
+            </select>
+          </label>
+        </div>
+        <label>Detalii
+          <textarea id="n-details" maxlength="4000" placeholder="Pași, link-uri, resurse, ce trebuie să apară în CV…"></textarea>
+        </label>
+        <div class="form-actions">
+          <button class="btn" type="submit" id="n-submit">Adaugă notița</button>
+          <button class="btn ghost" type="button" id="n-cancel" hidden>Renunță</button>
+        </div>
+        <div class="msg" id="form-msg" role="status"></div>
+      </form>
+
+      <section class="panel" aria-label="Date din folder">
+        <div class="tabs" role="tablist">
+          <button class="tab" role="tab" id="tab-skills" aria-selected="true" type="button">Skill-uri cerute</button>
+          <button class="tab" role="tab" id="tab-apps" aria-selected="false" type="button">Aplicări</button>
+        </div>
+        <div class="list" id="panel-skills" role="tabpanel" aria-labelledby="tab-skills"></div>
+        <div class="list" id="panel-apps" role="tabpanel" aria-labelledby="tab-apps" hidden></div>
+      </section>
+    </aside>
+  </div>
+</div>
+
+<datalist id="dl-companies"></datalist>
+<datalist id="dl-skills"></datalist>
+
+<script>
+(function () {
+  const KINDS = [
+    ["skill", "Învăț un skill"],
+    ["project", "Proiect nou"],
+    ["apply", "Aplic / trimit CV"],
+    ["cv", "Actualizez CV-ul"],
+    ["followup", "Follow-up"],
+    ["interview", "Interviu"],
+    ["other", "Altceva"]
+  ];
+  const KIND_LABEL = Object.fromEntries(KINDS);
+  const STATUS_LABEL = { todo: "De făcut", doing: "În lucru", done: "Gata" };
+  const PRIO_LABEL = { high: "Mare", medium: "Medie", low: "Mică" };
+  const SKILL_STATUS = ["to learn", "learning", "done"];
+  const SKILL_STATUS_LABEL = { "to learn": "De învățat", learning: "În studiu", done: "Stăpânit" };
+  const APP_STATUS = ["draft", "ready", "sent", "interview", "offer", "rejected"];
+  const APP_STATUS_LABEL = { draft: "CV în lucru", ready: "CV gata", sent: "Trimis", interview: "Interviu", offer: "Ofertă", rejected: "Respins" };
+  const MONTHS = ["ian", "feb", "mar", "apr", "mai", "iun", "iul", "aug", "sep", "oct", "noi", "dec"];
+
+  const state = { notes: [], skills: [], apps: [], meta: null, editing: null, quick: "", canWrite: true, deleting: null };
+  let db = null;
+  let ops = [];
+
+  const $ = (id) => document.getElementById(id);
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+
+  // ---------- dates ----------
+  function todayISO() { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  function daysUntil(iso) {
+    if (!iso) return null;
+    const [y, m, d] = iso.split("-").map(Number);
+    const t = new Date(); t.setHours(0, 0, 0, 0);
+    return Math.round((new Date(y, m - 1, d) - t) / 86400000);
+  }
+  function relText(n) {
+    if (n === null) return "";
+    if (n === 0) return "azi";
+    if (n === 1) return "mâine";
+    if (n === -1) return "ieri";
+    return n < 0 ? "acum " + (-n) + " zile" : "în " + n + " zile";
+  }
+
+  // ---------- form setup ----------
+  for (const [v, l] of KINDS) {
+    $("n-kind").append(new Option(l, v));
+    $("f-kind").append(new Option(l, v));
+  }
+
+  function readForm() {
+    return {
+      action: $("n-action").value.trim(),
+      company: $("n-company").value.trim(),
+      deadline: $("n-deadline").value || "",
+      kind: $("n-kind").value,
+      priority: $("n-priority").value,
+      skill: $("n-skill").value.trim(),
+      status: $("n-status").value,
+      details: $("n-details").value.trim()
+    };
+  }
+  function fillForm(n) {
+    $("n-action").value = n.action || "";
+    $("n-company").value = n.company || "";
+    $("n-deadline").value = n.deadline || "";
+    $("n-kind").value = n.kind || "other";
+    $("n-priority").value = n.priority || "medium";
+    $("n-skill").value = n.skill || "";
+    $("n-status").value = n.status || "todo";
+    $("n-details").value = n.details || "";
+  }
+  function resetForm() {
+    state.editing = null;
+    fillForm({ kind: "skill", priority: "medium", status: "todo" });
+    $("form-title").textContent = "Notiță nouă";
+    $("form-mode").textContent = "";
+    $("n-submit").textContent = "Adaugă notița";
+    $("n-cancel").hidden = true;
+  }
+  function setMsg(text, kind) { const m = $("form-msg"); m.textContent = text || ""; m.className = "msg" + (kind ? " " + kind : ""); }
+
+  $("n-cancel").addEventListener("click", () => { resetForm(); setMsg(""); });
+
+  $("form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!db) return;
+    const data = readForm();
+    if (!data.action) { setMsg("Scrie acțiunea înainte să salvezi.", "err"); return; }
+    const now = new Date().toISOString();
+    $("n-submit").disabled = true;
+    try {
+      if (state.editing) {
+        const prev = state.notes.find((n) => n.id === state.editing);
+        const patch = Object.assign({}, data, { updated_at: now });
+        if (data.status === "done" && (!prev || prev.status !== "done")) patch.done_at = now;
+        await db.collection("notes").doc(state.editing).update(patch);
+        setMsg("Notița a fost actualizată.", "ok");
+      } else {
+        await db.collection("notes").add(Object.assign({}, data, { created_at: now, updated_at: now, source: "page", done_at: data.status === "done" ? now : "" }));
+        setMsg("Notița a fost adăugată.", "ok");
+      }
+      resetForm();
+    } catch (err) {
+      setMsg(err && err.code === "quota_exceeded" ? "Baza de date e plină. Șterge notițe vechi și încearcă din nou." : "Nu am putut salva notița (" + ((err && err.code) || "eroare") + "). Încearcă din nou.", "err");
+      if (err && err.code === "invalid_argument") { state.canWrite = false; render(); }
+    } finally { $("n-submit").disabled = false; }
+  });
+
+  // prefill from a skill or application
+  function prefill(n) {
+    resetForm();
+    fillForm(Object.assign({ priority: "medium", status: "todo" }, n));
+    $("n-action").focus();
+    $("form").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  // ---------- note actions ----------
+  async function setNoteStatus(n, status) {
+    if (!db) return;
+    const now = new Date().toISOString();
+    const patch = { status, updated_at: now };
+    if (status === "done") patch.done_at = now;
+    try { await db.collection("notes").doc(n.id).update(patch); } catch (err) { setMsg("Nu am putut schimba statusul (" + (err.code || "eroare") + ").", "err"); }
+  }
+  async function deleteNote(n) {
+    if (!db) return;
+    try { await db.collection("notes").doc(n.id).delete(); state.deleting = null; } catch (err) { setMsg("Nu am putut șterge notița (" + (err.code || "eroare") + ").", "err"); }
+  }
+  function startEdit(n) {
+    state.editing = n.id;
+    fillForm(n);
+    $("form-title").textContent = "Editez notița";
+    $("form-mode").textContent = n.company || "";
+    $("n-submit").textContent = "Salvează modificările";
+    $("n-cancel").hidden = false;
+    setMsg("");
+    $("form").scrollIntoView({ behavior: "smooth", block: "start" });
+    $("n-action").focus();
+  }
+
+  // ---------- render ----------
+  function noteCard(n) {
+    const dd = daysUntil(n.deadline);
+    const done = n.status === "done";
+    const card = el("article", "note" + (done ? " done" : ""));
+    const date = el("div", "date");
+    if (n.deadline) {
+      const [y, m, d] = n.deadline.split("-").map(Number);
+      date.append(el("span", "d", String(d)), el("span", "m", MONTHS[m - 1] + (y !== new Date().getFullYear() ? " " + String(y).slice(2) : "")));
+      if (!done && dd < 0) date.classList.add("late");
+      else if (!done && dd === 0) date.classList.add("today");
+    } else { date.classList.add("none"); date.textContent = "fără termen"; }
+
+    const body = el("div", "body");
+    body.append(el("div", "action", n.action || "(fără titlu)"));
+    const meta = el("div", "meta");
+    if (n.company) meta.append(el("span", "chip company", n.company));
+    meta.append(el("span", "chip", KIND_LABEL[n.kind] || "Altceva"));
+    if (n.skill) meta.append(el("span", "chip", "⟶ " + n.skill));
+    if (n.priority === "high" && !done) meta.append(el("span", "chip prio-high", "prioritate mare"));
+    if (n.status === "doing") meta.append(el("span", "chip st-doing", "în lucru"));
+    if (n.deadline && !done) meta.append(el("span", "rel" + (dd < 0 ? " late" : ""), relText(dd)));
+    if (done && n.done_at) meta.append(el("span", "rel", "gata pe " + n.done_at.slice(0, 10)));
+    body.append(meta);
+    if (n.details) body.append(el("div", "details", n.details));
+
+    const acts = el("div", "acts");
+    if (state.canWrite && db) {
+      if (state.deleting === n.id) {
+        const yes = el("button", "icon-btn danger", "Da, șterge"); yes.type = "button"; yes.onclick = () => deleteNote(n);
+        const no = el("button", "icon-btn", "Nu"); no.type = "button"; no.onclick = () => { state.deleting = null; render(); };
+        acts.append(yes, no);
+      } else {
+        if (!done) {
+          const b = el("button", "icon-btn primary", "Gata"); b.type = "button"; b.title = "Marchează ca terminată"; b.onclick = () => setNoteStatus(n, "done"); acts.append(b);
+          if (n.status !== "doing") { const s = el("button", "icon-btn", "Încep"); s.type = "button"; s.onclick = () => setNoteStatus(n, "doing"); acts.append(s); }
+        } else {
+          const r = el("button", "icon-btn", "Redeschide"); r.type = "button"; r.onclick = () => setNoteStatus(n, "todo"); acts.append(r);
+        }
+        const ed = el("button", "icon-btn", "Editează"); ed.type = "button"; ed.onclick = () => startEdit(n);
+        const del = el("button", "icon-btn", "Șterge"); del.type = "button"; del.onclick = () => { state.deleting = n.id; render(); };
+        acts.append(ed, del);
+      }
+    }
+    card.append(date, body, acts);
+    return card;
+  }
+
+  function group(title, notes, cls) {
+    const g = el("section", "group" + (cls ? " " + cls : ""));
+    const h = el("div", "group-head");
+    h.append(el("h3", null, title), el("span", "count", String(notes.length)));
+    g.append(h);
+    notes.forEach((n) => g.append(noteCard(n)));
+    return g;
+  }
+
+  function matches(n) {
+    const q = $("f-q").value.trim().toLowerCase();
+    const c = $("f-company").value;
+    const k = $("f-kind").value;
+    if (c && (n.company || "") !== c) return false;
+    if (k && n.kind !== k) return false;
+    if (q && ![n.action, n.company, n.skill, n.details].join(" ").toLowerCase().includes(q)) return false;
+    const dd = daysUntil(n.deadline);
+    if (state.quick === "late" && !(n.status !== "done" && dd !== null && dd < 0)) return false;
+    if (state.quick === "week" && !(n.status !== "done" && dd !== null && dd >= 0 && dd <= 7)) return false;
+    if (state.quick === "open" && n.status === "done") return false;
+    if (state.quick === "skills" && !(n.kind === "skill" || n.kind === "project")) return false;
+    return true;
+  }
+
+  const byDeadline = (a, b) => (a.deadline || "9999").localeCompare(b.deadline || "9999") || ({ high: 0, medium: 1, low: 2 }[a.priority] ?? 1) - ({ high: 0, medium: 1, low: 2 }[b.priority] ?? 1);
+
+  function renderAgenda() {
+    const root = $("agenda");
+    root.replaceChildren();
+    if (!db) {
+      const e = el("div", "empty");
+      e.append(el("strong", null, "Caietul nu are date."), el("span", null, "Cere asistentului să regenereze caietul."));
+      root.append(e);
+      return;
+    }
+    const list = state.notes.filter(matches);
+    if (!state.notes.length) {
+      const e = el("div", "empty");
+      e.append(el("strong", null, "Nicio notiță încă."), el("span", null, "Adaugă prima acțiune din formular sau apasă „Planifică” pe un skill cerut din dreapta. Poți cere și asistentului: „adaugă o notiță pentru Exemplu SRL până vineri”."));
+      root.append(e);
+      return;
+    }
+    if (!list.length) { root.append(el("div", "empty", "Nicio notiță nu se potrivește filtrelor.")); return; }
+    const open = list.filter((n) => n.status !== "done").sort(byDeadline);
+    const done = list.filter((n) => n.status === "done").sort((a, b) => (b.done_at || "").localeCompare(a.done_at || ""));
+    const buckets = { late: [], today: [], week: [], later: [], none: [] };
+    for (const n of open) {
+      const d = daysUntil(n.deadline);
+      if (d === null) buckets.none.push(n);
+      else if (d < 0) buckets.late.push(n);
+      else if (d === 0) buckets.today.push(n);
+      else if (d <= 7) buckets.week.push(n);
+      else buckets.later.push(n);
+    }
+    if (buckets.late.length) root.append(group("Întârziate", buckets.late, "late"));
+    if (buckets.today.length) root.append(group("Azi", buckets.today, "today"));
+    if (buckets.week.length) root.append(group("Următoarele 7 zile", buckets.week));
+    if (buckets.later.length) root.append(group("Mai târziu", buckets.later));
+    if (buckets.none.length) root.append(group("Fără termen", buckets.none));
+    if (done.length) {
+      const det = el("details", "done-group");
+      det.append(el("summary", null, "Finalizate (" + done.length + ")"));
+      const g = el("div", "group");
+      done.forEach((n) => g.append(noteCard(n)));
+      det.append(g);
+      root.append(det);
+    }
+  }
+
+  function renderStats() {
+    let late = 0, week = 0, open = 0;
+    for (const n of state.notes) {
+      if (n.status === "done") continue;
+      open++;
+      const d = daysUntil(n.deadline);
+      if (d !== null && d < 0) late++;
+      else if (d !== null && d <= 7) week++;
+    }
+    $("s-late").textContent = db ? late : "–";
+    $("s-week").textContent = db ? week : "–";
+    $("s-open").textContent = db ? open : "–";
+    $("s-skills").textContent = db ? state.skills.filter((s) => s.status !== "done").length : "–";
+    document.querySelectorAll(".stat").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.quick === state.quick)));
+  }
+
+  function companies() {
+    const set = new Set();
+    state.apps.forEach((a) => a.company && set.add(a.company));
+    state.notes.forEach((n) => n.company && set.add(n.company));
+    return [...set].sort((a, b) => a.localeCompare(b, "ro"));
+  }
+
+  function renderFilters() {
+    const sel = $("f-company"); const cur = sel.value;
+    sel.replaceChildren(new Option("Toate companiile", ""));
+    const cs = companies();
+    cs.forEach((c) => sel.append(new Option(c, c)));
+    sel.value = cs.includes(cur) ? cur : "";
+    $("dl-companies").replaceChildren(...cs.map((c) => new Option(c)));
+    $("dl-skills").replaceChildren(...state.skills.map((s) => new Option(s.skill)));
+  }
+
+  function renderSkills() {
+    const root = $("panel-skills");
+    root.replaceChildren();
+    if (!state.skills.length) { root.append(el("div", "empty", db ? "Lista se completează automat când generezi CV-uri pentru joburi din domeniile tale țintă." : "Se încarcă…")); return; }
+    const order = { "to learn": 0, learning: 1, done: 2 };
+    const prio = { high: 0, medium: 1, low: 2 };
+    const list = [...state.skills].sort((a, b) => (order[a.status] ?? 0) - (order[b.status] ?? 0) || (b.times_requested || 0) - (a.times_requested || 0) || (prio[a.priority] ?? 1) - (prio[b.priority] ?? 1) || a.skill.localeCompare(b.skill));
+    for (const s of list) {
+      const it = el("div", "item");
+      const top = el("div", "item-top");
+      top.append(el("span", "item-title", s.skill), el("span", "demand", "×" + (s.times_requested || 1) + (s.priority === "high" ? " · mare" : "")));
+      it.append(top);
+      if (s.mini_project) it.append(el("small", null, "Mini-proiect: " + s.mini_project));
+      if (s.jobs && s.jobs.length) it.append(el("small", null, "Cerut de: " + s.jobs.join(" · ")));
+      const acts = el("div", "item-acts");
+      const open = state.notes.filter((n) => n.skill === s.skill && n.status !== "done").length;
+      if (state.canWrite && db) {
+        const sel = el("select"); sel.setAttribute("aria-label", "Status " + s.skill); sel.id = "sk-" + s.id;
+        SKILL_STATUS.forEach((v) => sel.append(new Option(SKILL_STATUS_LABEL[v], v)));
+        sel.value = s.status || "to learn";
+        sel.onchange = async () => {
+          try { await db.collection("skills").doc(s.id).update({ status: sel.value, status_from_page: true, status_changed_at: new Date().toISOString() }); }
+          catch (err) { setMsg("Nu am putut schimba statusul skill-ului (" + (err.code || "eroare") + ").", "err"); }
+        };
+        const plan = el("button", "icon-btn", "Planifică"); plan.type = "button";
+        plan.onclick = () => prefill({ action: s.mini_project || ("Învăț " + s.skill), skill: s.skill, kind: s.mini_project ? "project" : "skill", priority: s.priority === "high" ? "high" : "medium", company: (s.companies && s.companies.length) ? s.companies[0] : "", details: s.resource ? "Resursă: " + s.resource : "" });
+        acts.append(sel, plan);
+      } else {
+        acts.append(el("span", "chip", SKILL_STATUS_LABEL[s.status] || s.status));
+      }
+      if (open) acts.append(el("span", "chip st-doing", open + " notițe deschise"));
+      it.append(acts);
+      root.append(it);
+    }
+  }
+
+  function renderApps() {
+    const root = $("panel-apps");
+    root.replaceChildren();
+    if (!state.apps.length) { root.append(el("div", "empty", db ? "Aplicările apar aici după primul CV generat pentru un job." : "Se încarcă…")); return; }
+    const list = [...state.apps].sort((a, b) => (b.updated || "").localeCompare(a.updated || "") || a.company.localeCompare(b.company));
+    for (const a of list) {
+      const it = el("div", "item");
+      const top = el("div", "item-top");
+      top.append(el("span", "item-title", a.company + (a.role ? " — " + a.role : "")), el("span", "demand", a.updated || ""));
+      it.append(top);
+      const files = [];
+      if (a.cv_docx && a.cv_docx.length) files.push(a.cv_docx.length + " DOCX");
+      if (a.cv_pdf && a.cv_pdf.length) files.push(a.cv_pdf.length + " PDF");
+      it.append(el("small", null, (a.generic ? "CV general · " : "") + (files.join(" + ") || "fără CV exportat") + (a.languages && a.languages.length ? " · " + a.languages.join("/") : "")));
+      const acts = el("div", "item-acts");
+      if (state.canWrite && db && !a.generic) {
+        const sel = el("select"); sel.setAttribute("aria-label", "Status aplicare " + a.company); sel.id = "ap-" + a.id;
+        APP_STATUS.forEach((v) => sel.append(new Option(APP_STATUS_LABEL[v], v)));
+        sel.value = a.app_status || "ready";
+        sel.onchange = async () => {
+          try { await db.collection("applications").doc(a.id).update({ app_status: sel.value, app_status_changed_at: new Date().toISOString() }); }
+          catch (err) { setMsg("Nu am putut schimba statusul aplicării (" + (err.code || "eroare") + ").", "err"); }
+        };
+        acts.append(sel);
+      }
+      if (state.canWrite && db) {
+        const plan = el("button", "icon-btn", "Notiță"); plan.type = "button";
+        plan.onclick = () => prefill({ company: a.company, kind: a.generic ? "cv" : "apply", action: a.generic ? "Actualizez CV-ul " + a.role : "Trimit CV-ul pentru " + (a.role || a.company), details: a.draft ? "Draft: " + a.draft : "" });
+        acts.append(plan);
+      }
+      const open = state.notes.filter((n) => n.company === a.company && n.status !== "done").length;
+      if (open) acts.append(el("span", "chip st-doing", open + " notițe deschise"));
+      it.append(acts);
+      root.append(it);
+    }
+  }
+
+  function renderSync() {
+    const s = $("sync");
+    if (!db) { s.textContent = "Fără date"; return; }
+    s.replaceChildren(document.createTextNode("Generat din folder: "), el("b", null, ((state.meta && state.meta.last_sync) || "").replace("T", " ").slice(0, 16)));
+  }
+
+  function render() {
+    renderStats(); renderFilters(); renderAgenda(); renderSkills(); renderApps(); renderSync();
+    $("form").querySelectorAll("input,select,textarea,button").forEach((c) => { c.disabled = !db || !state.canWrite; });
+    renderPending();
+  }
+
+  // ---------- interactions ----------
+  ["f-q", "f-company", "f-kind"].forEach((id) => $(id).addEventListener("input", renderAgenda));
+  document.querySelectorAll(".stat").forEach((b) => b.addEventListener("click", () => {
+    const q = b.dataset.quick;
+    if (q === "skills") { selectTab("skills"); }
+    state.quick = state.quick === q ? "" : q;
+    renderStats(); renderAgenda();
+  }));
+  function selectTab(which) {
+    const skills = which === "skills";
+    $("tab-skills").setAttribute("aria-selected", String(skills));
+    $("tab-apps").setAttribute("aria-selected", String(!skills));
+    $("panel-skills").hidden = !skills;
+    $("panel-apps").hidden = skills;
+    try { localStorage.setItem("caiet-tab", which); } catch (e) {}
+  }
+  $("tab-skills").addEventListener("click", () => selectTab("skills"));
+  $("tab-apps").addEventListener("click", () => selectTab("apps"));
+  try { const t = localStorage.getItem("caiet-tab"); if (t === "apps") selectTab("apps"); } catch (e) {}
+
+  resetForm();
+  render();
+
+  // ---------- data: embedded snapshot + local change log ----------
+  // The assistant regenerates this file from the CSVs (tracker.py dashboard). Edits made here are kept
+  // in the browser as ops until the user exports them and the assistant imports them (import-changes).
+  const DATA = /*__CAIET_DATA__*/null;
+  const OPS_KEY = "caiet-ops-" + ((DATA && DATA.workspace_id) || "default");
+
+  function saveOps() { try { localStorage.setItem(OPS_KEY, JSON.stringify(ops)); } catch (e) {} }
+  function loadOps() {
+    try { ops = JSON.parse(localStorage.getItem(OPS_KEY) || "[]"); } catch (e) { ops = []; }
+    const applied = new Set((DATA && DATA.applied_ops) || []);
+    ops = ops.filter((o) => !applied.has(o.op_id));
+    saveOps();
+  }
+  function slug(t) { return (t || "").normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "note"; }
+
+  function applyOp(o) {
+    if (o.op === "note-add") state.notes.push(Object.assign({}, o.data));
+    else if (o.op === "note-update") { const n = state.notes.find((x) => x.id === o.id); if (n) Object.assign(n, o.patch); }
+    else if (o.op === "note-delete") state.notes = state.notes.filter((x) => x.id !== o.id);
+    else if (o.op === "skill-status") { const s = state.skills.find((x) => x.skill === o.skill); if (s) s.status = o.status; }
+    else if (o.op === "app-status") { const a = state.apps.find((x) => x.id === o.id); if (a) a.app_status = o.status; }
+  }
+  function record(o) {
+    o.op_id = "op-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 7);
+    o.at = new Date().toISOString();
+    ops.push(o); saveOps(); applyOp(o); render();
+  }
+
+  // Implements the calls the page already makes: db.collection(c).add(data) / .doc(id).update(patch) / .delete()
+  const localDb = {
+    collection(name) {
+      return {
+        async add(data) {
+          const id = "n-" + todayISO().replace(/-/g, "") + "-" + slug(data.action) + "-" + Math.random().toString(36).slice(2, 5);
+          record({ op: "note-add", data: Object.assign({ id }, data) });
+        },
+        doc(id) {
+          return {
+            async update(patch) {
+              if (name === "notes") record({ op: "note-update", id, patch });
+              else if (name === "skills") { const s = state.skills.find((x) => x.id === id); if (s) record({ op: "skill-status", skill: s.skill, status: patch.status }); }
+              else if (name === "applications") record({ op: "app-status", id, status: patch.app_status });
+            },
+            async delete() { record({ op: "note-delete", id }); }
+          };
+        }
+      };
+    }
+  };
+
+  function exportText() { return JSON.stringify({ workspace_id: DATA.workspace_id, exported_at: new Date().toISOString(), ops }, null, 2); }
+  function renderPending() {
+    $("pending").hidden = !ops.length;
+    $("pending-text").textContent = (ops.length === 1 ? "1 modificare făcută aici nu e încă" : ops.length + " modificări făcute aici nu sunt încă")
+      + " în folder. Descarcă fișierul și dă-l asistentului, sau lipește în chat textul copiat.";
+  }
+  $("exp-dl").addEventListener("click", () => {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([exportText()], { type: "application/json" }));
+    a.download = "caiet_changes.json";
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+  $("exp-copy").addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText(exportText()); $("exp-copy").textContent = "Copiat"; }
+    catch (e) { $("exp-copy").textContent = "Copierea a eșuat"; }
+    setTimeout(() => { $("exp-copy").textContent = "Copiază"; }, 2000);
+  });
+
+  (function boot() {
+    if (!DATA) { render(); return; }
+    state.notes = DATA.notes || [];
+    state.skills = (DATA.skills || []).filter((s) => s.skill);
+    state.apps = (DATA.applications || []).filter((a) => a.company);
+    state.meta = DATA.meta || {};
+    if (DATA.title) { $("title").textContent = DATA.title; document.title = DATA.title; }
+    $("ws").textContent = DATA.workspace || "";
+    db = localDb;
+    loadOps();
+    ops.forEach(applyOp);
+    render();
+  })();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "id": "oracle",
+  "kind": "ats",
+  "name": "Oracle Recruiting",
+  "match": {
+    "hosts": [
+      "oraclecloud.com"
+    ],
+    "markers": [
+      "candidateexperience"
+    ]
+  },
+  "login": "required",
+  "notes": [
+    "the job ad comes from the public REST API",
+    "the application starts with an email + one-time code entered by the user"
+  ]
+}

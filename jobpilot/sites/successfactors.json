@@ -1,0 +1,17 @@
+{
+  "id": "successfactors",
+  "kind": "ats",
+  "name": "SuccessFactors",
+  "match": {
+    "hosts": [
+      "successfactors.com",
+      "successfactors.eu",
+      "sapsf.com",
+      "sapsf.eu"
+    ],
+    "markers": [
+      "successfactors"
+    ]
+  },
+  "login": "required"
+}

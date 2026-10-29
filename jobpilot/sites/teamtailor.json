@@ -1,0 +1,18 @@
+{
+  "id": "teamtailor",
+  "kind": "ats",
+  "name": "Teamtailor",
+  "match": {
+    "hosts": [
+      "teamtailor.com"
+    ],
+    "markers": [
+      "teamtailor"
+    ]
+  },
+  "apply_text": [
+    "Apply for this job",
+    "Apply"
+  ],
+  "login": "none"
+}

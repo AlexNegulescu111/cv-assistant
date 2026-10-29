@@ -1,0 +1,28 @@
+{
+  "id": "ashby",
+  "kind": "ats",
+  "name": "Ashby",
+  "match": {
+    "hosts": [
+      "ashbyhq.com"
+    ],
+    "markers": [
+      "ashbyhq"
+    ]
+  },
+  "apply_text": [
+    "Apply for this Job",
+    "Application"
+  ],
+  "submit_text": [
+    "Submit Application"
+  ],
+  "captcha": true,
+  "login": "none",
+  "notes": [
+    "job page /<id>, form /<id>/application",
+    "ids are regenerated on every load: fields are found by label",
+    "typeahead comboboxes open on ArrowDown",
+    "a reCAPTCHA iframe is always present: submitted by the user"
+  ]
+}

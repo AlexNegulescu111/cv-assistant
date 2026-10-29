@@ -1,0 +1,6 @@
+interface:
+  display_name: "Aplică la job"
+  short_description: "Completează (și trimite, dacă permiți) formularul de aplicare din răspunsurile salvate"
+  default_prompt: "Aplică la jobul de la linkul ăsta:"
+policy:
+  allow_implicit_invocation: true

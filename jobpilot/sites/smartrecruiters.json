@@ -1,0 +1,22 @@
+{
+  "id": "smartrecruiters",
+  "kind": "ats",
+  "name": "SmartRecruiters",
+  "match": {
+    "hosts": [
+      "smartrecruiters.com"
+    ],
+    "markers": [
+      "smartrecruiters"
+    ]
+  },
+  "description_selector": ".job-sections",
+  "apply_text": [
+    "I'm interested",
+    "Apply"
+  ],
+  "login": "optional",
+  "notes": [
+    "multi-step: personal data, then screening questions"
+  ]
+}

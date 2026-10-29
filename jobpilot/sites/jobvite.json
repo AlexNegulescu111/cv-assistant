@@ -1,0 +1,14 @@
+{
+  "id": "jobvite",
+  "kind": "ats",
+  "name": "Jobvite",
+  "match": {
+    "hosts": [
+      "jobvite.com"
+    ],
+    "markers": [
+      "jobvite"
+    ]
+  },
+  "login": "optional"
+}

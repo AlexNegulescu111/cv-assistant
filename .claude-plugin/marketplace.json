@@ -1,0 +1,11 @@
+{
+  "name": "cv-assistant-marketplace",
+  "owner": { "name": "Alexandru Negulescu" },
+  "plugins": [
+    {
+      "name": "cv-assistant",
+      "source": "./",
+      "description": "Tailored, honest CVs from a master skills pool, plus a job-search tracker."
+    }
+  ]
+}

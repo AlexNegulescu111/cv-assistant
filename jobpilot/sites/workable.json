@@ -1,0 +1,24 @@
+{
+  "id": "workable",
+  "kind": "ats",
+  "name": "Workable",
+  "match": {
+    "hosts": [
+      "workable.com"
+    ],
+    "markers": [
+      "apply.workable.com"
+    ]
+  },
+  "description_selector": "[data-ui='job-description']",
+  "apply_text": [
+    "Apply for this job"
+  ],
+  "submit_text": [
+    "Submit application"
+  ],
+  "login": "none",
+  "notes": [
+    "radios and checkboxes hidden behind styled labels"
+  ]
+}

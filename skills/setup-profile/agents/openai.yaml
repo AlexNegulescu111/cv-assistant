@@ -1,0 +1,6 @@
+interface:
+  display_name: "Configurare profil CV"
+  short_description: "Onboarding: din CV și LinkedIn construiește master pool-ul de competențe"
+  default_prompt: "Vreau să-mi configurez profilul. Îți încarc CV-ul."
+policy:
+  allow_implicit_invocation: true

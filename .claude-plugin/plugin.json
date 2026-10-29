@@ -1,0 +1,16 @@
+{
+  "name": "cv-assistant",
+  "version": "0.2.0",
+  "description": "Honest, ATS-friendly CVs tailored to each job ad: master skills pool with evidence levels, CV generation (DOCX/PDF), competency tracking and a job-search tracker.",
+  "author": {
+    "name": "Alexandru Negulescu"
+  },
+  "keywords": [
+    "cv",
+    "resume",
+    "job-search",
+    "ats",
+    "career"
+  ],
+  "license": "MIT"
+}

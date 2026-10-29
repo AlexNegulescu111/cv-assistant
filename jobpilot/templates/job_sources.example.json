@@ -1,0 +1,62 @@
+{
+  "_help": "Boards: the slug from the board URL (job-boards.greenhouse.io/<slug>, jobs.lever.co/<slug>, jobs.ashbyhq.com/<slug>). Check new ones with: python -m jobpilot collect run --dry-run; peviitor: search words (+ optional city, rows, pages) on the peviitor.ro aggregator - links to boards already listed are skipped, other Greenhouse/Lever/Ashby boards become suggestions (collect suggest), company sites are kept and their description is read from the job page (describe_limit per run)",
+  "boards": {
+    "greenhouse": [
+      {
+        "board": "gitlab",
+        "company": "GitLab"
+      }
+    ],
+    "lever": [
+      {
+        "board": "spotify",
+        "company": "Spotify"
+      }
+    ],
+    "ashby": [
+      {
+        "board": "supabase",
+        "company": "Supabase"
+      }
+    ],
+    "peviitor": [
+      {
+        "board": "data analyst",
+        "rows": 50,
+        "pages": 2
+      }
+    ]
+  },
+  "filters": {
+    "title_include": [
+      "data",
+      "analyst",
+      "engineer"
+    ],
+    "title_exclude": [
+      "principal",
+      "staff",
+      "director",
+      "head",
+      "vp",
+      "intern"
+    ],
+    "description_exclude": [
+      "security clearance"
+    ],
+    "locations": [
+      "romania",
+      "bucharest"
+    ],
+    "allow_remote": true,
+    "remote_regions": [
+      "europe",
+      "emea",
+      "eu",
+      "global",
+      "worldwide",
+      "anywhere"
+    ],
+    "max_age_days": 30
+  }
+}
